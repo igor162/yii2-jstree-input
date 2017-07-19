@@ -3,8 +3,6 @@ JsTree for Yii2
 
 [JsTree](http://www.jstree.com/) for Yii2.
 
-WIP...
-
 Installation
 ------------
 The preferred way to install this helper is through [composer](http://getcomposer.org/download/).
