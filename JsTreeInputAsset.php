@@ -1,6 +1,6 @@
 <?php
 
-namespace igor162\JsTree;
+namespace igor162\JsTreeInput;
 
 use yii\web\AssetBundle;
 
