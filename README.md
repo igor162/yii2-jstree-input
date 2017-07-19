@@ -23,7 +23,6 @@ or add
 
 to the require section of your application's `composer.json` file.
 
-https://packagist.org/packages/igor162/yii2-jstree
 
 Usage
 -----
@@ -43,7 +42,7 @@ use devgroup\JsTreeWidget\actions\nestedset\FullTreeDataAction;
                     'querySortOrder' => 'sort',
                     'modelParentAttribute' => 'path',
                     'modelLabelAttribute' => 'name',
-                    'className' => MyNameClassTree::class,
+                    'className' => MyNameClassTree::class, // You model class name
                     'cacheActive' => false,
                 ],
         ];
@@ -53,7 +52,7 @@ use devgroup\JsTreeWidget\actions\nestedset\FullTreeDataAction;
 With model and ActiveForm :
 ```php
 
-<?= $form->field($model, 'path')->widget(\igor162\JsTree\JsTree::className(), [
+<?= $form->field($model, 'path')->widget(\igor162\JsTree\JsTreeInput::className(), [
 	'treeDataRoute' => ['getTree', 'selected_id' => $model->id],
 ]) ?>
 
