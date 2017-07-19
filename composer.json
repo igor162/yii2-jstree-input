@@ -1,0 +1,21 @@
+{
+    "name": "igor162/yii2-jstree-input",
+    "description": "JsTree for Yii2",
+    "type": "yii2-extension",
+    "keywords": ["yii2", "extension", "jstree"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Igor Fandyuhin",
+            "email": "igor162@ya.ru"
+        }
+    ],
+    "require": {
+        "bower-asset/jstree" : "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "igor162\\JsTreeInput\\": ""
+        }
+    }
+}
