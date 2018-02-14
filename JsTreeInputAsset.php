@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
 class JsTreeInputAsset extends AssetBundle
 {
 
-    public $sourcePath = '@bower/jstree/dist';
+    public $sourcePath = '@vakata/jstree/dist';
 
     public $depends = [
         'yii\web\JqueryAsset',
