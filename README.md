@@ -56,7 +56,10 @@ With model and ActiveForm :
 
 ```
 
-Use with "wbraganca/yii2-dynamicform":
+Use with "wbraganca/yii2-dynamicform"
+
+* [Demo 1](https://github.com/wbraganca/yii2-dynamicform) - (Address Book).
+:
 ```php
 $script = <<< JS
 jQuery("form#{$model->formName()} .dynamicform_wrapper").on("afterInsert", function(e, item) {
