@@ -27,6 +27,8 @@ use yii\web\View;
  * @property array $clientOptions
  * @property string $template
  * @property array $options
+ * @property string $_hashVar
+ * @property string $_jstreeOptionsVar
  * @property boolean $multiple
  * @property string $onChanged
  * @property string $onSelect
@@ -37,6 +39,8 @@ use yii\web\View;
  */
 class JsTreeInput extends \yii\widgets\InputWidget
 {
+
+    const WIDGET_NAME = 'jstree';
 
     /**
      * @var array Enabled jsTree plugins
@@ -82,6 +86,18 @@ class JsTreeInput extends \yii\widgets\InputWidget
     public $options = [];
 
     /**
+     * @var string the hashed global variable name storing the pluginOptions.
+     */
+    private $_hashVar;
+
+    /**
+     * @var string the variable that will store additional options for Select2 to add enhanced features after the
+     * plugin is loaded and initialized. This variable name will be stored as a data attribute `data-s2-options`
+     * within the base select input options.
+     */
+    private $_jstreeOptionsVar;
+
+    /**
      * Multiple selection
      */
     public $multiple = false;
@@ -119,18 +135,16 @@ class JsTreeInput extends \yii\widgets\InputWidget
         if (count($this->selectedNodes) > 0) {
             $this->treeDataRoute['selected'] = $this->selectedNodes;
         }
-
+        $this->hashOptions();
         $this->registerClientScript();
+        $this->options['data-jstree-style'] = $this->_hashVar;
 
-        if ($this->hasModel()) {
-            $input = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
-        } else {
-            $input = Html::hiddenInput($this->name, $this->value, $this->options);
-        }
+        $input = $this->renderInput();
+
 
         echo strtr($this->template, [
             '{input}' => $input,
-            '{jstree}' => Html::tag('div', '', ['id' => $this->getJsTreeId()]),
+            '{jstree}' => Html::tag('div', '', ['id' => $this->getJsTreeId()/*, $dataJstreeStyle*/]),
         ]);
     }
 
@@ -143,6 +157,8 @@ class JsTreeInput extends \yii\widgets\InputWidget
         $jsTreeId = $this->getJsTreeId();
         $options = $this->getClientOptions();
         $options = empty($options) ? '' : Json::encode($options);
+        $this->_jstreeOptionsVar = 'jstreeOptions_' . hash('crc32', $options);
+        $this->options['data-jstree-options'] = $this->_jstreeOptionsVar;
 
         $onChanged = '';
         if ($this->onChanged)
@@ -155,14 +171,32 @@ class JsTreeInput extends \yii\widgets\InputWidget
         $view = $this->getView();
         JsTreeInputAsset::register($view);
 
+        $view->registerJs("var {$this->_jstreeOptionsVar} = {$options};", View::POS_HEAD);
+
         $this->getView()->registerJs("
+        
             jQuery('#$jsTreeId')
                 .on('loaded.jstree', function() { jQuery(this).jstree('select_node', jQuery('#$inputId').val().split(','), true); })
                 .on('changed.jstree', function(e, data) { jQuery('#$inputId').val(data.selected.join()); })
                 $onChanged
                 $onSelect
-                .jstree($options);
+                .jstree({$this->_jstreeOptionsVar});
                                     ", View::POS_READY);
+    }
+
+    /**
+     * Renders the source Input for the Select2 plugin. Graceful fallback to a normal HTML select dropdown or text
+     * input - in case JQuery is not supported by the browser
+     */
+    protected function renderInput()
+    {
+        if ($this->hasModel()) {
+            $input = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
+        } else {
+            $input = Html::hiddenInput($this->name, $this->value, $this->options);
+        }
+
+        return $input;
     }
 
     /**
@@ -217,6 +251,14 @@ class JsTreeInput extends \yii\widgets\InputWidget
      */
     protected function getJsTreeId()
     {
-        return $this->options['id'] . '_jstree';
+        return $this->options['id'] . '_' . self::WIDGET_NAME;
+    }
+
+    /**
+     * Generates a hashed variable to store the options.
+     */
+    protected function hashOptions()
+    {
+        $this->_hashVar = self::WIDGET_NAME . '_' . hash('crc32', Json::encode($this->options));
     }
 }
