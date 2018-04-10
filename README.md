@@ -72,9 +72,9 @@ var jstree = $(this).find('[data-jstree-style]');
         $('#' + jstreeName).jstree('destroy');
 
         $('#' + jstreeName)
-          .on('loaded.jstree', function() { jQuery(this).jstree('select_node', jQuery('#' + jstreeInput).val().split(','), true); })
-          .on('changed.jstree', function(e, data) { jQuery('#' + jstreeInput).val(data.selected.join()); })
-          .jstree(jstreeOptions);
+         .on('loaded.jstree', function() { jQuery(this).jstree('select_node', jQuery('#' + jstreeInput).val().split(','), true); })
+         .on('changed.jstree', function(e, data) { jQuery('#' + jstreeInput).val(data.selected.join()); })
+         .jstree(jstreeOptions);
 
       });
     }
