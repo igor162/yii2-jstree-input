@@ -74,8 +74,8 @@ var jstree = $(this).find('[data-jstree-style]');
         $('#' + jstreeName)
           .on('loaded.jstree', function() { jQuery(this).jstree('select_node', jQuery('#' + jstreeInput).val().split(','), true); })
           .on('changed.jstree', function(e, data) { jQuery('#' + jstreeInput).val(data.selected.join()); })
-          .on('changed.jstree', '')
-          .on('select_node.jstree', '')
+         // .on('changed.jstree', '')
+         // .on('select_node.jstree', '')
           .jstree(jstreeOptions);
 
       });
