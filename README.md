@@ -84,8 +84,34 @@ var jstree = $(this).find('[data-jstree-style]');
 JS;
 $this->registerJs($script);
 
+    <?php DynamicFormWidget::begin([
+        'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+        'widgetBody' => '.container-items', // required: css class selector
+        'widgetItem' => '.item', // required: css class
+        'limit' => 4, // the maximum times, an element can be added (default 999)
+        'min' => 0, // 0 or 1 (default 1)
+        'insertButton' => '.add-item', // css class
+        'deleteButton' => '.remove-item', // css class
+        'model' => $modelsAddress[0],
+        'formId' => 'dynamic-form',
+        'formFields' => [
+            'full_name',
+            'address_line1',
+            'address_line2',
+            'city',
+            'state',
+            'postal_code',
+        ],
+    ]); ?>
+     <?php foreach ($modelsAddress as $index => $modelAddress): ?>
+     <?php
+     // necessary for update action.
+     if (! $modelAddress->isNewRecord) { echo Html::activeHiddenInput($modelAddress, "[{$index}]id"); } ?>
+			
 <?= $form->field($modelDetail, '[{$index}]path')->widget(\igor162\JsTree\JsTreeInput::className(), [
 	'treeDataRoute' => ['getTree', 'selected_id' => $model->id],
 ]) ?>
+	<?php endforeach; ?>
+    <?php DynamicFormWidget::end(); ?>
 
 ```
